@@ -9,6 +9,11 @@
     Add new site
   </button>
 
+  <!-- alert  -->
+  <div class="p-5 my-3 bg-teal-100 text-teal-900" *ngIf="isSuccess">
+    {{ successMessage }}
+  </div>
+
   <!-- form to save a new site -->
   <div class="px-20 py-10 mb-10 my-5 border-4 border-gray-900">
     <h2 class="text-3xl text-center">{{ formState }} site</h2>

@@ -16,6 +16,8 @@ export class SiteListComponent implements OnInit {
   siteId!: string;
 
   formState: string = 'Add new';
+  isSuccess: boolean = false;
+  successMessage!: string;
 
   constructor(private passwordManagerService: PasswordManagerService) {}
 
@@ -23,12 +25,17 @@ export class SiteListComponent implements OnInit {
     this.loadSites();
   }
 
+  showAlert(message: string) {
+    this.isSuccess = true;
+    this.successMessage = message;
+  }
+
   onSubmit(values: object) {
     if (this.formState == 'Add new') {
       this.passwordManagerService
         .addSite(values)
         .then(() => {
-          console.log('Data of the site has been saved succesfully');
+          this.showAlert('Data saved successfully');
         })
         .catch((err) => {
           console.log(err);
@@ -37,7 +44,7 @@ export class SiteListComponent implements OnInit {
       this.passwordManagerService
         .updateSite(this.siteId, values)
         .then(() => {
-          console.log('Data has been updated');
+          this.showAlert('Data Edited successfully');
         })
         .catch((err) => {
           console.log(err);
@@ -58,7 +65,7 @@ export class SiteListComponent implements OnInit {
     this.passwordManagerService
       .deleteSite(id)
       .then(() => {
-        console.log('Site has been deleted succesfully');
+        this.showAlert('Data Deleted successfully');
       })
       .catch((err) => {
         console.log(err);
