@@ -41,4 +41,10 @@ export class PasswordManagerService {
     const dbInstance = doc(this.fireStore, 'sites', id);
     return deleteDoc(dbInstance);
   }
+
+  // Password queries which means sub collection and using a sub collection
+  addPassword(data: object, siteId: string) {
+    const dbInstance = collection(this.fireStore, `sites/${siteId}/passwords`);
+    return addDoc(dbInstance, data);
+  }
 }
