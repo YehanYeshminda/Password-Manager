@@ -8,6 +8,10 @@
       <div class="p-6 space-y-6">
         <h1 class="text-2xl font-bold text-gray-900">Login to your account</h1>
 
+        <div *ngIf="isError" class="p-5 my-3 bg-red-100 text-red-900">
+          Username or password is wrong!
+        </div>
+
         <form
           #ngForm="ngForm"
           class="space-y-6"
