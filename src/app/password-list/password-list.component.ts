@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { PasswordManagerService } from '../password-manager.service';
 
 @Component({
@@ -12,6 +13,14 @@ export class PasswordListComponent implements OnInit {
   siteName!: string;
   siteUrl!: string;
   siteImg!: string;
+  passwordList!: Observable<Array<any>>;
+
+  email!: string;
+  username!: string;
+  password!: string;
+  passwordId!: string;
+
+  formState: string = 'Add new';
 
   constructor(
     private route: ActivatedRoute,
@@ -37,5 +46,20 @@ export class PasswordListComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  loadPassword() {
+    this.passwordList = this.passwordManagerServive.loadPasswords(this.siteId);
+  }
+
+  editPassword(email: string, username: string, password: string, id: string) {
+    this.passwordId = id;
+    this.email = email;
+    this.username = username;
+    this.password = password;
+
+    this.formState = 'Edit';
+  }
+
+  ngOnInit(): void {
+    this.loadPassword();
+  }
 }
