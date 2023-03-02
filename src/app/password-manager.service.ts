@@ -52,4 +52,14 @@ export class PasswordManagerService {
     const dbInstance = collection(this.fireStore, `sites/${siteId}/passwords`);
     return collectionData(dbInstance, { idField: 'id' });
   }
+
+  updatePassword(siteId: string, passwordId: string, data: object) {
+    const docInstance = doc(
+      this.fireStore,
+      `sites/${siteId}/passwords`,
+      passwordId
+    );
+
+    return updateDoc(docInstance, data);
+  }
 }

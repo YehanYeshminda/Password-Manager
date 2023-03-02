@@ -36,14 +36,25 @@ export class PasswordListComponent implements OnInit {
 
   // this is used in order to add a site using a sub collection
   onSubmit(values: object) {
-    this.passwordManagerServive
-      .addPassword(values, this.siteId)
-      .then(() => {
-        console.log('Password has been saved successfully');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (this.formState === 'Add new') {
+      this.passwordManagerServive
+        .addPassword(values, this.siteId)
+        .then(() => {
+          console.log('Password has been saved successfully');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (this.formState === 'Edit') {
+      this.passwordManagerServive
+        .updatePassword(this.siteId, this.passwordId, values)
+        .then(() => {
+          console.log('Data has been updated succesfully');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   loadPassword() {
