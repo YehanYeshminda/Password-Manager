@@ -22,6 +22,9 @@ export class PasswordListComponent implements OnInit {
 
   formState: string = 'Add new';
 
+  isSuccess: boolean = false;
+  successMessage!: string;
+
   constructor(
     private route: ActivatedRoute,
     private passwordManagerServive: PasswordManagerService
@@ -40,7 +43,8 @@ export class PasswordListComponent implements OnInit {
       this.passwordManagerServive
         .addPassword(values, this.siteId)
         .then(() => {
-          console.log('Password has been saved successfully');
+          this.showAlert('Data saved successfully');
+          this.resetForm();
         })
         .catch((err) => {
           console.log(err);
@@ -49,12 +53,18 @@ export class PasswordListComponent implements OnInit {
       this.passwordManagerServive
         .updatePassword(this.siteId, this.passwordId, values)
         .then(() => {
-          console.log('Data has been updated succesfully');
+          this.showAlert('Data Updated successfully');
+          this.resetForm();
         })
         .catch((err) => {
           console.log(err);
         });
     }
+  }
+
+  showAlert(message: string) {
+    this.isSuccess = true;
+    this.successMessage = message;
   }
 
   loadPassword() {
@@ -68,6 +78,25 @@ export class PasswordListComponent implements OnInit {
     this.password = password;
 
     this.formState = 'Edit';
+  }
+
+  deletePassword(passwordId: string) {
+    this.passwordManagerServive
+      .deletePassword(this.siteId, passwordId)
+      .then(() => {
+        this.showAlert('Data deleted successfully');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  resetForm() {
+    this.email = '';
+    this.username = '';
+    this.password = '';
+    this.formState = 'Add new';
+    this.passwordId = '';
   }
 
   ngOnInit(): void {

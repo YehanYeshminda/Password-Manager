@@ -62,4 +62,14 @@ export class PasswordManagerService {
 
     return updateDoc(docInstance, data);
   }
+
+  deletePassword(siteId: string, passwordId: string) {
+    const docInstance = doc(
+      this.fireStore,
+      `sites/${siteId}/passwords`,
+      passwordId
+    );
+
+    return deleteDoc(docInstance);
+  }
 }
