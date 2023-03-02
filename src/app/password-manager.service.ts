@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 import {
   Firestore,
   collection,
@@ -14,7 +15,7 @@ import {
 })
 export class PasswordManagerService {
   // dependency injection
-  constructor(private fireStore: Firestore) {}
+  constructor(private fireStore: Firestore, private auth: Auth) {}
 
   // INSERT DATA
   addSite(data: object) {
@@ -71,5 +72,10 @@ export class PasswordManagerService {
     );
 
     return deleteDoc(docInstance);
+  }
+
+  // login queries
+  login(email: string, password: string) {
+    return signInWithEmailAndPassword(this.auth, email, password);
   }
 }
