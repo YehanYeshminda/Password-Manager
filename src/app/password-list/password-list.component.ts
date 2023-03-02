@@ -3,6 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PasswordManagerService } from '../password-manager.service';
 
+// imports from 3 party
+import { AES, enc } from 'crypto-js';
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-password-list',
   templateUrl: './password-list.component.html',
@@ -13,7 +17,7 @@ export class PasswordListComponent implements OnInit {
   siteName!: string;
   siteUrl!: string;
   siteImg!: string;
-  passwordList!: Observable<Array<any>>;
+  passwordList!: Array<any>;
 
   email!: string;
   username!: string;
@@ -38,7 +42,10 @@ export class PasswordListComponent implements OnInit {
   }
 
   // this is used in order to add a site using a sub collection
-  onSubmit(values: object) {
+  onSubmit(values: any) {
+    const passwordEncrpted = this.encryptPassword(values.password);
+    values.password = passwordEncrpted;
+
     if (this.formState === 'Add new') {
       this.passwordManagerServive
         .addPassword(values, this.siteId)
@@ -68,7 +75,9 @@ export class PasswordListComponent implements OnInit {
   }
 
   loadPassword() {
-    this.passwordList = this.passwordManagerServive.loadPasswords(this.siteId);
+    this.passwordManagerServive.loadPasswords(this.siteId).subscribe((val) => {
+      this.passwordList = val;
+    });
   }
 
   editPassword(email: string, username: string, password: string, id: string) {
@@ -91,12 +100,31 @@ export class PasswordListComponent implements OnInit {
       });
   }
 
+  onDecrypt(password: string, arrayIndex: number) {
+    const decPassword = this.decryptPassword(password);
+    this.passwordList[arrayIndex].password = decPassword;
+  }
+
   resetForm() {
     this.email = '';
     this.username = '';
     this.password = '';
     this.formState = 'Add new';
     this.passwordId = '';
+  }
+
+  encryptPassword(password: string) {
+    const secretKey = environment.secretKey;
+    const encryptedPassword = AES.encrypt(password, secretKey).toString();
+    return encryptedPassword;
+  }
+
+  decryptPassword(password: string) {
+    const secretKey = environment.secretKey;
+    const decryptedPassword = AES.decrypt(password, secretKey).toString(
+      enc.Utf8
+    );
+    return decryptedPassword;
   }
 
   ngOnInit(): void {
